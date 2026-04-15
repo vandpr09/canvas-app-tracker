@@ -19,6 +19,9 @@ body {
 .topbar h1 {
     margin: 0;
     color: #111827;
+    font-size: 30px;
+    font-weight: 700;
+    letter-spacing: 1px;
 }
 
 /* MAIN LAYOUT */
@@ -52,6 +55,11 @@ body {
     border-radius: 14px;
     border: 1px solid #e5e7eb;
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+    animation: fadeIn 0.3s ease;
+}
+
+.panel-box h2 {
+    margin-bottom: 14px;
 }
 
 /* INPUTS */
@@ -65,7 +73,7 @@ body {
     margin-top: 8px;
     margin-bottom: 10px;
     box-sizing: border-box;
-    border-radius: 8px;
+    border-radius: 10px;
     border: 1px solid #d1d5db;
     font-size: 14px;
 }
@@ -83,32 +91,17 @@ button:hover {
     background: #66789e;
 }
 
-/* TOP BAR */
-.topbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #ffffff;
-    padding: 15px 20px;
-    border-bottom: 1px solid #d1d5db;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+.small-btn {
+    width: 100%;
+    margin-top: 6px;
 }
 
-/* CALENDAR TOOLBAR BUTTONS */
-.calendar-toolbar button {
-    width: auto;
-    padding: 10px 16px;
-    background: #9aa8c4;
+.delete-btn {
+    background: #b91c1c;
 }
 
-.calendar-toolbar button:hover {
-    background: #7c8db5;
-}
-
-/* TODAY HIGHLIGHT */
-.today {
-    border: 2px solid #9aa8c4;
-    background: #eef2f7;
+.delete-btn:hover {
+    background: #991b1b;
 }
 
 /* CALENDAR HEADER */
@@ -123,16 +116,18 @@ button:hover {
 .calendar-toolbar h2 {
     margin: 0;
     color: #111827;
+    font-size: 28px;
+    font-weight: 700;
 }
 
 .calendar-toolbar button {
     width: auto;
     padding: 10px 16px;
-    background: #6b7280;
+    background: #9aa8c4;
 }
 
 .calendar-toolbar button:hover {
-    background: #4b5563;
+    background: #7c8db5;
 }
 
 /* CALENDAR GRID */
@@ -162,11 +157,13 @@ button:hover {
     cursor: pointer;
     transition: 0.2s ease;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    animation: fadeIn 0.3s ease;
 }
 
 .calendar-day:hover {
     background: #f9fafb;
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
 }
 
 .calendar-day.empty {
@@ -179,7 +176,20 @@ button:hover {
 .date-number {
     font-weight: bold;
     margin-bottom: 6px;
-    color: #111827;
+    color: inherit;
+}
+
+/* TODAY HIGHLIGHT */
+.today {
+    border: 2px solid #9aa8c4;
+    background: #eef2f7;
+}
+
+/* SELECTED DAY */
+.selected-day {
+    border: 2px solid #7c8db5 !important;
+    background: #eef2f7 !important;
+    box-shadow: 0 0 10px rgba(124, 141, 181, 0.25);
 }
 
 /* TASK TAGS IN CALENDAR */
@@ -197,6 +207,19 @@ button:hover {
     font-weight: 600;
 }
 
+.completed-task {
+    opacity: 0.6;
+    text-decoration: line-through;
+}
+
+.overdue-task {
+    border: 2px solid #dc2626;
+    background: #fee2e2 !important;
+    color: #991b1b;
+    font-weight: bold;
+    box-shadow: 0 0 8px rgba(220, 38, 38, 0.25);
+}
+
 /* TASK CARD DETAILS */
 .task-card {
     background: #ffffff;
@@ -205,6 +228,7 @@ button:hover {
     padding: 12px;
     margin-bottom: 12px;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.03);
+    animation: fadeIn 0.3s ease;
 }
 
 .task-card h3 {
@@ -218,7 +242,14 @@ button:hover {
 
 .task-overdue {
     border: 2px solid #dc2626;
-    background: #fff1f2;
+    background: #fee2e2;
+    box-shadow: 0 0 12px rgba(220, 38, 38, 0.25);
+}
+
+.overdue-label {
+    color: #dc2626;
+    font-weight: bold;
+    font-size: 14px;
 }
 
 /* COURSE LIST */
@@ -250,12 +281,6 @@ button:hover {
     height: 14px;
     border-radius: 50%;
     display: inline-block;
-}
-
-/* TODAY HIGHLIGHT */
-.today {
-    border: 2px solid #6b7280;
-    background: #f3f4f6;
 }
 
 /* DARK MODE */
@@ -303,4 +328,36 @@ button:hover {
 .dark-mode .date-number,
 .dark-mode .task-card h3 {
     color: #f9fafb;
+}
+
+.dark-mode .task-tag {
+    color: #111827;
+}
+
+.dark-mode .selected-day {
+    background: #374151 !important;
+    border: 2px solid #9aa8c4 !important;
+}
+
+.dark-mode .calendar-day.selected-day {
+    background: #374151 !important;
+    border: 2px solid #9aa8c4 !important;
+    color: #ffffff !important;
+}
+
+.dark-mode .calendar-day.selected-day .date-number {
+    color: #ffffff !important;
+    font-weight: 700;
+}
+
+/* ANIMATION */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }

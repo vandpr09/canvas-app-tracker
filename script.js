@@ -58,19 +58,18 @@ function isOverdue(task) {
   return !task.completed && taskDate < today;
 }
 
-function getTaskTypeClass(type) {
-  if (type === "assignment") return "assignment";
-  if (type === "quiz") return "quiz";
-  if (type === "exam") return "exam";
-  return "syllabus";
-}
-
 function getRandomSoftColor() {
   const colors = [
     "#dbeafe", "#dcfce7", "#fce7f3", "#fef3c7",
     "#e9d5ff", "#fde2e4", "#cffafe", "#ede9fe"
   ];
   return colors[Math.floor(Math.random() * colors.length)];
+}
+
+function resetSelectedDayView() {
+  selectedDay = null;
+  selectedDate.textContent = "Click a date";
+  taskDetailsList.innerHTML = "<p>Select a day to view tasks 📅</p>";
 }
 
 // ===== COURSE FUNCTIONS =====
@@ -102,7 +101,7 @@ function renderCourses() {
 
   if (courses.length === 0) {
     const li = document.createElement("li");
-    li.textContent = "No courses added yet.";
+    li.textContent = "No courses added yet 📚";
     courseList.appendChild(li);
     return;
   }
@@ -147,6 +146,8 @@ function updateCourseDropdown() {
 }
 
 function deleteCourse(index) {
+  if (!confirm("Are you sure you want to delete this course and all related tasks?")) return;
+
   const removedCourse = courses[index];
   courses.splice(index, 1);
   delete courseColors[removedCourse];
@@ -241,6 +242,8 @@ function toggleTaskComplete(taskId) {
 }
 
 function deleteTask(taskId) {
+  if (!confirm("Are you sure you want to delete this task?")) return;
+
   tasks = tasks.filter(t => t.id !== taskId);
   saveData();
   generateCalendar(currentMonth, currentYear);
@@ -262,6 +265,7 @@ function generateCalendar(month, year) {
 
   const firstDay = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const today = new Date();
 
   for (let i = 0; i < firstDay; i++) {
     const emptyBox = document.createElement("div");
@@ -274,6 +278,18 @@ function generateCalendar(month, year) {
     dayBox.classList.add("calendar-day");
 
     const fullDate = formatDate(year, month, day);
+
+    if (
+      day === today.getDate() &&
+      month === today.getMonth() &&
+      year === today.getFullYear()
+    ) {
+      dayBox.classList.add("today");
+    }
+
+    if (selectedDay === fullDate) {
+      dayBox.classList.add("selected-day");
+    }
 
     const dateNumber = document.createElement("div");
     dateNumber.classList.add("date-number");
@@ -301,6 +317,11 @@ function generateCalendar(month, year) {
     });
 
     dayBox.addEventListener("click", () => {
+      document.querySelectorAll(".calendar-day").forEach(box => {
+        box.classList.remove("selected-day");
+      });
+
+      dayBox.classList.add("selected-day");
       selectedDay = fullDate;
       selectedDate.textContent = `${monthNames[month]} ${day}, ${year}`;
       renderSelectedDayTasks();
@@ -314,14 +335,14 @@ function renderSelectedDayTasks() {
   taskDetailsList.innerHTML = "";
 
   if (!selectedDay) {
-    taskDetailsList.innerHTML = "<p>No day selected.</p>";
+    taskDetailsList.innerHTML = "<p>Select a day to view tasks 📅</p>";
     return;
   }
 
   const dayTasks = tasks.filter(task => task.dueDate === selectedDay);
 
   if (dayTasks.length === 0) {
-    taskDetailsList.innerHTML = "<p>No tasks for this day yet.</p>";
+    taskDetailsList.innerHTML = "<p>No tasks for this day yet ✨</p>";
     return;
   }
 
@@ -337,7 +358,10 @@ function renderSelectedDayTasks() {
       card.classList.add("task-overdue");
     }
 
-    const overdueText = isOverdue(task) ? " (Overdue)" : "";
+    const overdueText = isOverdue(task)
+      ? ' <span class="overdue-label">⚠ OVERDUE</span>'
+      : "";
+
     const timeText = task.dueTime ? task.dueTime : "No time set";
 
     card.innerHTML = `
@@ -379,6 +403,8 @@ prevMonthBtn.addEventListener("click", () => {
     currentMonth = 11;
     currentYear--;
   }
+
+  resetSelectedDayView();
   generateCalendar(currentMonth, currentYear);
 });
 
@@ -388,13 +414,22 @@ nextMonthBtn.addEventListener("click", () => {
     currentMonth = 0;
     currentYear++;
   }
+
+  resetSelectedDayView();
   generateCalendar(currentMonth, currentYear);
 });
 
 // ===== DARK MODE =====
 darkModeToggle.addEventListener("click", () => {
   document.body.classList.toggle("dark-mode");
+  const isDarkMode = document.body.classList.contains("dark-mode");
+  localStorage.setItem("darkMode", JSON.stringify(isDarkMode));
 });
+
+const savedDarkMode = JSON.parse(localStorage.getItem("darkMode"));
+if (savedDarkMode) {
+  document.body.classList.add("dark-mode");
+}
 
 // ===== BUTTON EVENTS =====
 addCourseBtn.addEventListener("click", addCourse);
@@ -403,4 +438,5 @@ saveTaskBtn.addEventListener("click", addOrUpdateTask);
 // ===== START =====
 renderCourses();
 updateCourseDropdown();
+resetSelectedDayView();
 generateCalendar(currentMonth, currentYear);
