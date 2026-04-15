@@ -1,12 +1,13 @@
 // ===== DATA =====
-let courses = [];
-let tasks = [];
+let courses = JSON.parse(localStorage.getItem("courses")) || [];
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+let courseColors = JSON.parse(localStorage.getItem("courseColors")) || {};
 
-// ===== DATE SETUP =====
 let currentDate = new Date();
 let currentMonth = currentDate.getMonth();
 let currentYear = currentDate.getFullYear();
 let selectedDay = null;
+let editingTaskId = null;
 
 // ===== ELEMENTS =====
 const calendarGrid = document.getElementById("calendarGrid");
@@ -35,6 +36,13 @@ const monthNames = [
   "July", "August", "September", "October", "November", "December"
 ];
 
+// ===== SAVE DATA =====
+function saveData() {
+  localStorage.setItem("courses", JSON.stringify(courses));
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+  localStorage.setItem("courseColors", JSON.stringify(courseColors));
+}
+
 // ===== HELPERS =====
 function formatDate(year, month, day) {
   const mm = String(month + 1).padStart(2, "0");
@@ -57,6 +65,14 @@ function getTaskTypeClass(type) {
   return "syllabus";
 }
 
+function getRandomSoftColor() {
+  const colors = [
+    "#dbeafe", "#dcfce7", "#fce7f3", "#fef3c7",
+    "#e9d5ff", "#fde2e4", "#cffafe", "#ede9fe"
+  ];
+  return colors[Math.floor(Math.random() * colors.length)];
+}
+
 // ===== COURSE FUNCTIONS =====
 function addCourse() {
   const courseName = courseNameInput.value.trim();
@@ -72,10 +88,13 @@ function addCourse() {
   }
 
   courses.push(courseName);
-  courseNameInput.value = "";
+  courseColors[courseName] = getRandomSoftColor();
 
+  courseNameInput.value = "";
+  saveData();
   renderCourses();
   updateCourseDropdown();
+  generateCalendar(currentMonth, currentYear);
 }
 
 function renderCourses() {
@@ -90,22 +109,27 @@ function renderCourses() {
 
   courses.forEach((course, index) => {
     const li = document.createElement("li");
-    li.style.display = "flex";
-    li.style.justifyContent = "space-between";
-    li.style.alignItems = "center";
-    li.style.gap = "8px";
+    li.classList.add("course-item");
+
+    const leftWrap = document.createElement("div");
+    leftWrap.classList.add("course-left");
+
+    const colorDot = document.createElement("span");
+    colorDot.classList.add("course-dot");
+    colorDot.style.background = courseColors[course] || "#ccc";
 
     const span = document.createElement("span");
     span.textContent = course;
 
+    leftWrap.appendChild(colorDot);
+    leftWrap.appendChild(span);
+
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "Delete";
-    deleteBtn.style.width = "auto";
-    deleteBtn.addEventListener("click", () => {
-      deleteCourse(index);
-    });
+    deleteBtn.classList.add("small-btn");
+    deleteBtn.addEventListener("click", () => deleteCourse(index));
 
-    li.appendChild(span);
+    li.appendChild(leftWrap);
     li.appendChild(deleteBtn);
     courseList.appendChild(li);
   });
@@ -125,9 +149,11 @@ function updateCourseDropdown() {
 function deleteCourse(index) {
   const removedCourse = courses[index];
   courses.splice(index, 1);
+  delete courseColors[removedCourse];
 
   tasks = tasks.filter(task => task.course !== removedCourse);
 
+  saveData();
   renderCourses();
   updateCourseDropdown();
   generateCalendar(currentMonth, currentYear);
@@ -135,7 +161,7 @@ function deleteCourse(index) {
 }
 
 // ===== TASK FUNCTIONS =====
-function addTask() {
+function addOrUpdateTask() {
   const course = taskCourseSelect.value;
   const title = taskTitleInput.value.trim();
   const type = taskTypeSelect.value;
@@ -148,18 +174,33 @@ function addTask() {
     return;
   }
 
-  const task = {
-    id: Date.now(),
-    course,
-    title,
-    type,
-    dueDate,
-    dueTime,
-    priority,
-    completed: false
-  };
+  if (editingTaskId) {
+    const task = tasks.find(t => t.id === editingTaskId);
+    if (task) {
+      task.course = course;
+      task.title = title;
+      task.type = type;
+      task.dueDate = dueDate;
+      task.dueTime = dueTime;
+      task.priority = priority;
+    }
+    editingTaskId = null;
+    saveTaskBtn.textContent = "Save Task";
+  } else {
+    const task = {
+      id: Date.now(),
+      course,
+      title,
+      type,
+      dueDate,
+      dueTime,
+      priority,
+      completed: false
+    };
+    tasks.push(task);
+  }
 
-  tasks.push(task);
+  saveData();
   clearTaskForm();
   generateCalendar(currentMonth, currentYear);
   renderSelectedDayTasks();
@@ -174,17 +215,34 @@ function clearTaskForm() {
   taskPrioritySelect.value = "low";
 }
 
+function editTask(taskId) {
+  const task = tasks.find(t => t.id === taskId);
+  if (!task) return;
+
+  taskCourseSelect.value = task.course;
+  taskTitleInput.value = task.title;
+  taskTypeSelect.value = task.type;
+  taskDateInput.value = task.dueDate;
+  taskTimeInput.value = task.dueTime || "";
+  taskPrioritySelect.value = task.priority || "low";
+
+  editingTaskId = task.id;
+  saveTaskBtn.textContent = "Update Task";
+}
+
 function toggleTaskComplete(taskId) {
   const task = tasks.find(t => t.id === taskId);
   if (!task) return;
 
   task.completed = !task.completed;
+  saveData();
   generateCalendar(currentMonth, currentYear);
   renderSelectedDayTasks();
 }
 
 function deleteTask(taskId) {
   tasks = tasks.filter(t => t.id !== taskId);
+  saveData();
   generateCalendar(currentMonth, currentYear);
   renderSelectedDayTasks();
 }
@@ -226,15 +284,16 @@ function generateCalendar(month, year) {
 
     dayTasks.forEach(task => {
       const taskTag = document.createElement("div");
-      taskTag.classList.add("task-tag", getTaskTypeClass(task.type));
+      taskTag.classList.add("task-tag");
+
+      taskTag.style.background = courseColors[task.course] || "#dbeafe";
 
       if (task.completed) {
-        taskTag.style.opacity = "0.6";
-        taskTag.style.textDecoration = "line-through";
+        taskTag.classList.add("completed-task");
       }
 
       if (isOverdue(task)) {
-        taskTag.style.border = "2px solid red";
+        taskTag.classList.add("overdue-task");
       }
 
       taskTag.textContent = task.title;
@@ -269,15 +328,13 @@ function renderSelectedDayTasks() {
   dayTasks.forEach(task => {
     const card = document.createElement("div");
     card.classList.add("task-card");
-    card.style.border = "1px solid #ccc";
-    card.style.borderRadius = "8px";
-    card.style.padding = "10px";
-    card.style.marginBottom = "10px";
-    card.style.background = "white";
 
-    if (document.body.classList.contains("dark-mode")) {
-      card.style.background = "#374151";
-      card.style.color = "white";
+    if (task.completed) {
+      card.classList.add("task-complete");
+    }
+
+    if (isOverdue(task)) {
+      card.classList.add("task-overdue");
     }
 
     const overdueText = isOverdue(task) ? " (Overdue)" : "";
@@ -294,16 +351,21 @@ function renderSelectedDayTasks() {
 
     const completeBtn = document.createElement("button");
     completeBtn.textContent = task.completed ? "Mark Incomplete" : "Mark Complete";
-    completeBtn.style.width = "100%";
-    completeBtn.style.marginBottom = "8px";
+    completeBtn.classList.add("small-btn");
     completeBtn.addEventListener("click", () => toggleTaskComplete(task.id));
 
+    const editBtn = document.createElement("button");
+    editBtn.textContent = "Edit";
+    editBtn.classList.add("small-btn");
+    editBtn.addEventListener("click", () => editTask(task.id));
+
     const deleteBtn = document.createElement("button");
-    deleteBtn.textContent = "Delete Task";
-    deleteBtn.style.width = "100%";
+    deleteBtn.textContent = "Delete";
+    deleteBtn.classList.add("small-btn", "delete-btn");
     deleteBtn.addEventListener("click", () => deleteTask(task.id));
 
     card.appendChild(completeBtn);
+    card.appendChild(editBtn);
     card.appendChild(deleteBtn);
 
     taskDetailsList.appendChild(card);
@@ -332,14 +394,13 @@ nextMonthBtn.addEventListener("click", () => {
 // ===== DARK MODE =====
 darkModeToggle.addEventListener("click", () => {
   document.body.classList.toggle("dark-mode");
-  renderSelectedDayTasks();
 });
 
 // ===== BUTTON EVENTS =====
 addCourseBtn.addEventListener("click", addCourse);
-saveTaskBtn.addEventListener("click", addTask);
+saveTaskBtn.addEventListener("click", addOrUpdateTask);
 
-// ===== START PROGRAM =====
+// ===== START =====
 renderCourses();
 updateCourseDropdown();
 generateCalendar(currentMonth, currentYear);

@@ -1,7 +1,8 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: #f5f6fa;
+    background: #f3f4f6;
+    color: #1f2937;
 }
 
 /* TOP BAR */
@@ -9,9 +10,15 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: white;
+    background: #ffffff;
     padding: 15px 20px;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #d1d5db;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.topbar h1 {
+    margin: 0;
+    color: #111827;
 }
 
 /* MAIN LAYOUT */
@@ -22,10 +29,10 @@ body {
 
 /* LEFT PANEL */
 .left-panel {
-    width: 300px;
-    background: white;
+    width: 320px;
+    background: #f9fafb;
     padding: 20px;
-    border-right: 1px solid #ddd;
+    border-right: 1px solid #e5e7eb;
     overflow-y: auto;
 }
 
@@ -33,26 +40,75 @@ body {
 .right-panel {
     flex: 1;
     padding: 20px;
+    overflow-y: auto;
+    background: #f3f4f6;
 }
 
 /* BOXES */
 .panel-box {
-    background: #f9fafc;
+    background: #ffffff;
     padding: 15px;
     margin-bottom: 20px;
-    border-radius: 10px;
-    border: 1px solid #ddd;
+    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
 }
 
 /* INPUTS */
 .panel-box input,
 .panel-box select,
-.panel-box button {
+.panel-box button,
+.topbar button,
+.calendar-toolbar button {
     width: 100%;
     padding: 10px;
     margin-top: 8px;
     margin-bottom: 10px;
     box-sizing: border-box;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+}
+
+/* BUTTONS */
+button {
+    background: #7c8db5;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+button:hover {
+    background: #66789e;
+}
+
+/* TOP BAR */
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    padding: 15px 20px;
+    border-bottom: 1px solid #d1d5db;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* CALENDAR TOOLBAR BUTTONS */
+.calendar-toolbar button {
+    width: auto;
+    padding: 10px 16px;
+    background: #9aa8c4;
+}
+
+.calendar-toolbar button:hover {
+    background: #7c8db5;
+}
+
+/* TODAY HIGHLIGHT */
+.today {
+    border: 2px solid #9aa8c4;
+    background: #eef2f7;
 }
 
 /* CALENDAR HEADER */
@@ -64,6 +120,21 @@ body {
     margin-bottom: 20px;
 }
 
+.calendar-toolbar h2 {
+    margin: 0;
+    color: #111827;
+}
+
+.calendar-toolbar button {
+    width: auto;
+    padding: 10px 16px;
+    background: #6b7280;
+}
+
+.calendar-toolbar button:hover {
+    background: #4b5563;
+}
+
 /* CALENDAR GRID */
 .calendar-grid {
     display: grid;
@@ -73,81 +144,163 @@ body {
 
 /* DAY NAMES */
 .day-name {
-    background: #dfe6f0;
+    background: #e5e7eb;
     padding: 10px;
     text-align: center;
     font-weight: bold;
-    border-radius: 8px;
+    border-radius: 10px;
+    color: #374151;
 }
 
 /* DAY BOX */
 .calendar-day {
-    min-height: 100px;
-    background: white;
-    border: 1px solid #ccc;
-    border-radius: 10px;
+    min-height: 110px;
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 14px;
     padding: 8px;
     cursor: pointer;
+    transition: 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
 }
 
 .calendar-day:hover {
-    background: #eef3f8;
+    background: #f9fafb;
+    transform: translateY(-2px);
 }
 
 .calendar-day.empty {
     background: transparent;
     border: none;
+    box-shadow: none;
+    cursor: default;
 }
 
 .date-number {
     font-weight: bold;
-    margin-bottom: 5px;
+    margin-bottom: 6px;
+    color: #111827;
 }
 
-/* DARK MODE */
-.dark-mode {
-    background: #1f2937;
-    color: white;
-}
-
-.dark-mode .topbar,
-.dark-mode .left-panel,
-.dark-mode .panel-box,
-.dark-mode .calendar-day {
-    background: #374151;
-    color: white;
-}
-
-.dark-mode .day-name {
-    background: #4b5563;
-}
+/* TASK TAGS IN CALENDAR */
 .task-tag {
     font-size: 12px;
-    padding: 4px 6px;
-    border-radius: 6px;
+    padding: 5px 7px;
+    border-radius: 8px;
     margin-top: 4px;
     display: block;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+    border-left: 4px solid rgba(0, 0, 0, 0.15);
+    color: #111827;
+    font-weight: 600;
 }
 
-.task-tag.assignment {
-    background: #dbeafe;
-    color: #1d4ed8;
+/* TASK CARD DETAILS */
+.task-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 12px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.03);
 }
 
-.task-tag.quiz {
-    background: #fef3c7;
-    color: #b45309;
+.task-card h3 {
+    margin-top: 0;
+    color: #111827;
 }
 
-.task-tag.exam {
-    background: #fee2e2;
-    color: #b91c1c;
+.task-complete {
+    opacity: 0.75;
 }
 
-.task-tag.syllabus {
-    background: #e9d5ff;
-    color: #7c3aed;
+.task-overdue {
+    border: 2px solid #dc2626;
+    background: #fff1f2;
+}
+
+/* COURSE LIST */
+#courseList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.course-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    background: #f3f4f6;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+}
+
+.course-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.course-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+/* TODAY HIGHLIGHT */
+.today {
+    border: 2px solid #6b7280;
+    background: #f3f4f6;
+}
+
+/* DARK MODE */
+.dark-mode {
+    background: #111827;
+    color: #f9fafb;
+}
+
+.dark-mode .topbar,
+.dark-mode .left-panel,
+.dark-mode .panel-box,
+.dark-mode .calendar-day,
+.dark-mode .task-card {
+    background: #1f2937;
+    color: #f9fafb;
+    border-color: #374151;
+}
+
+.dark-mode .right-panel {
+    background: #111827;
+}
+
+.dark-mode .day-name {
+    background: #374151;
+    color: #f9fafb;
+}
+
+.dark-mode .calendar-day:hover {
+    background: #273244;
+}
+
+.dark-mode .course-item {
+    background: #273244;
+}
+
+.dark-mode input,
+.dark-mode select {
+    background: #111827;
+    color: white;
+    border: 1px solid #4b5563;
+}
+
+.dark-mode .topbar h1,
+.dark-mode .calendar-toolbar h2,
+.dark-mode .date-number,
+.dark-mode .task-card h3 {
+    color: #f9fafb;
 }
