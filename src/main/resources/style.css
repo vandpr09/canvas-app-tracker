@@ -1,0 +1,243 @@
+/* Base styling and layout */
+.root {
+    /* DARK THEME (Default) */
+    bg-color: #191919;
+    card-bg: #2D2D2D;
+    text-main: #FFFFFF;
+    text-muted: #A0A0A0;
+    primary: #2F80ED;
+    accent: #27AE60;
+    danger: #EB5757;
+    border-color: #3D3D3D;
+    shadow-color: rgba(0,0,0,0.6);
+    card-border: transparent;
+    row-odd-bg: #252525;
+
+    -fx-background-color: bg-color;
+    -fx-font-family: "Segoe UI", Helvetica, sans-serif;
+}
+
+.root.light-mode {
+    /* LIGHT THEME OVERRIDES */
+    bg-color: #F0F2F5;
+    card-bg: #FFFFFF;
+    text-main: #1C1E21;
+    text-muted: #606770;
+    primary: #1877F2;
+    accent: #42B72A;
+    danger: #FA383E;
+    border-color: #CCD0D5;
+    shadow-color: rgba(0,0,0,0.15);
+    card-border: #DDDFE2;
+    row-odd-bg: #F5F6F7;
+}
+
+/* Global Text Colors */
+.label {
+    -fx-text-fill: text-main;
+}
+
+.sidebar-header {
+    -fx-font-weight: bold;
+    -fx-text-fill: text-main;
+    -fx-font-size: 14px;
+}
+
+.header-text {
+    -fx-text-fill: text-main;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+
+.course-card {
+    -fx-background-color: card-bg;
+    -fx-background-radius: 12px;
+    -fx-border-color: card-border;
+    -fx-border-radius: 12px;
+    -fx-border-width: 1px;
+    -fx-padding: 0; /* Remove padding here so image can touch edges */
+    -fx-min-width: 220px;
+    -fx-max-width: 220px;
+    -fx-effect: dropshadow(three-pass-box, shadow-color, 15, 0, 0, 8);
+    -fx-cursor: hand;
+}
+
+.course-card-image {
+    -fx-background-radius: 12px 12px 0 0;
+    -fx-background-color: border-color; /* Placeholder color */
+}
+
+.course-detail-header-image {
+    -fx-effect: none;
+    -fx-background-radius: 0;
+}
+
+.course-header-container {
+    -fx-padding: 0;
+    -fx-alignment: center;
+    -fx-background-color: border-color;
+}
+
+.mini-edit-button {
+    -fx-background-color: rgba(0,0,0,0.5);
+    -fx-text-fill: white;
+    -fx-background-radius: 15px;
+    -fx-padding: 2 6 2 6;
+    -fx-font-size: 10px;
+    -fx-cursor: hand;
+}
+
+.mini-edit-button:hover {
+    -fx-background-color: primary;
+}
+
+.syllabus-link {
+    -fx-text-fill: primary;
+    -fx-underline: true;
+    -fx-cursor: hand;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.course-card:hover {
+    -fx-translate-y: -5px;
+    -fx-effect: dropshadow(three-pass-box, shadow-color, 20, 0, 0, 12);
+}
+
+.card-content-area {
+    -fx-padding: 15px;
+}
+
+.card-title {
+    -fx-text-fill: text-main;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.card-subtitle {
+    -fx-text-fill: text-muted;
+    -fx-font-size: 12px;
+}
+
+.progress-label {
+    -fx-text-fill: text-main;
+    -fx-font-size: 11px;
+    -fx-padding: 5 0 0 0;
+}
+
+.action-button {
+    -fx-background-color: primary;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+}
+
+.action-button:hover {
+    -fx-brightness: 1.1;
+}
+
+.danger-button {
+    -fx-background-color: danger;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8px 16px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+}
+
+.danger-button:hover {
+    -fx-brightness: 1.1;
+}
+
+.theme-toggle {
+    -fx-background-color: card-bg;
+    -fx-text-fill: text-main;
+    -fx-border-color: border-color;
+    -fx-border-radius: 20px;
+    -fx-background-radius: 20px;
+    -fx-padding: 5px 15px;
+    -fx-cursor: hand;
+}
+
+/* Status Colors */
+.status-ranger { -fx-text-fill: accent !important; -fx-font-weight: bold; }
+.status-in-progress { -fx-text-fill: #F2C94C !important; -fx-font-weight: bold; }
+.status-none { -fx-text-fill: danger !important; -fx-font-weight: bold; }
+
+/* Table and Tab Styling using variables */
+.table-view {
+    -fx-background-color: bg-color;
+    -fx-control-inner-background: card-bg;
+}
+/* Table Header Styling */
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: border-color;
+    -fx-size: 35px;
+}
+.table-view .column-header .label {
+    -fx-text-fill: text-main;
+    -fx-font-weight: bold;
+}
+.table-row-cell {
+    -fx-background-color: card-bg;
+    -fx-text-fill: text-main;
+}
+.table-row-cell:odd {
+    -fx-background-color: row-odd-bg;
+}
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-background-color: bg-color;
+}
+.tab-pane .tab {
+    -fx-background-color: card-bg;
+}
+.tab-pane .tab:selected {
+    -fx-background-color: primary;
+}
+.tab .tab-label {
+    -fx-text-fill: text-main;
+}
+
+/* Dialog Styling */
+.dialog-pane {
+    -fx-background-color: bg-color;
+}
+.dialog-pane .label {
+    -fx-text-fill: text-main;
+}
+.dialog-pane .header-panel {
+    -fx-background-color: card-bg;
+}
+.dialog-pane .header-panel .label {
+    -fx-font-weight: bold;
+}
+
+/* CheckBox Styling */
+.check-box {
+    -fx-text-fill: text-main;
+}
+.check-box .box {
+    -fx-background-color: card-bg;
+    -fx-border-color: border-color;
+    -fx-border-radius: 3px;
+}
+.check-box:selected .mark {
+    -fx-background-color: accent;
+}
+
+/* Input Fields Styling */
+.text-field, .date-picker, .combo-box {
+    -fx-background-color: card-bg;
+    -fx-text-fill: text-main;
+    -fx-border-color: border-color;
+    -fx-border-radius: 4px;
+    -fx-prompt-text-fill: text-muted;
+}
+.date-picker .text-field {
+    -fx-border-width: 0;
+}
+.combo-box .list-cell {
+    -fx-text-fill: text-main;
+}
