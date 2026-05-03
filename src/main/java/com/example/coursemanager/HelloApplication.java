@@ -69,7 +69,7 @@ public class HelloApplication extends Application {
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
         headerRow.getChildren().addAll(headerLabel);
-        
+
         HBox buttonRow = new HBox(15);
         buttonRow.setAlignment(Pos.CENTER_LEFT);
         buttonRow.getChildren().addAll(addButton, tablesButton, calendarButton, spacer, themeToggle);
@@ -110,12 +110,12 @@ public class HelloApplication extends Application {
         CourseCard card = new CourseCard(course);
         // Use card's inner layout for the main click
         card.getChildren().get(0).setOnMouseClicked(e -> openCourseDetail(course));
-        
+
         // Setup the mini edit button
         card.getMiniEditBtn().setOnAction(e -> {
             showEditCourseDialog(course, null);
         });
-        
+
         cardGrid.getChildren().add(card);
     }
 
@@ -129,7 +129,7 @@ public class HelloApplication extends Application {
 
     // --- UPDATED: COURSE DETAIL VIEW WITH DELETE BUTTON ---
     private void openCourseDetail(Course course) {
-        VBox layout = new VBox(0); 
+        VBox layout = new VBox(0);
         layout.getStyleClass().add("root");
         if (isLightMode) layout.getStyleClass().add("light-mode");
 
@@ -140,25 +140,25 @@ public class HelloApplication extends Application {
                 if (imgFile.exists()) {
                     ImageView iv = new ImageView(new Image(imgFile.toURI().toString()));
                     iv.setPreserveRatio(true);
-                    
+
                     StackPane bannerContainer = new StackPane(iv);
                     bannerContainer.setPrefHeight(250);
                     bannerContainer.setMinHeight(250);
                     bannerContainer.setMaxHeight(250);
                     bannerContainer.getStyleClass().add("course-header-container");
-                    
+
                     // NEW: Dynamic scaling logic
                     iv.fitWidthProperty().bind(window.widthProperty());
-                    
+
                     StackPane.setAlignment(iv, Pos.CENTER);
-                    
+
                     // Dynamic clip that follows window width
                     javafx.scene.shape.Rectangle clip = new javafx.scene.shape.Rectangle();
                     clip.setWidth(900); // Initial
                     clip.setHeight(250);
                     clip.widthProperty().bind(window.widthProperty());
                     bannerContainer.setClip(clip);
-                    
+
                     layout.getChildren().add(bannerContainer);
                 }
             } catch (Exception ex) {
@@ -216,7 +216,10 @@ public class HelloApplication extends Application {
             Hyperlink syllabusLink = new Hyperlink("📄 View Syllabus (" + new File(course.getSyllabusPath()).getName() + ")");
             syllabusLink.getStyleClass().add("syllabus-link");
             syllabusLink.setOnAction(e -> {
-                try { Desktop.getDesktop().open(new File(course.getSyllabusPath())); } catch (Exception ex) {}
+                try {
+                    Desktop.getDesktop().open(new File(course.getSyllabusPath()));
+                } catch (Exception ex) {
+                }
             });
             content.getChildren().add(syllabusLink);
         }
@@ -233,8 +236,10 @@ public class HelloApplication extends Application {
         Tab quizTab = new Tab("Quizzes", quizzesTable);
         Tab examTab = new Tab("Exams", examsTable);
 
-        readTab.setClosable(false); assnTab.setClosable(false);
-        quizTab.setClosable(false); examTab.setClosable(false);
+        readTab.setClosable(false);
+        assnTab.setClosable(false);
+        quizTab.setClosable(false);
+        examTab.setClosable(false);
 
         tabPane.getTabs().addAll(readTab, assnTab, quizTab, examTab);
 
@@ -383,12 +388,13 @@ public class HelloApplication extends Application {
         dialog.getDialogPane().getButtonTypes().addAll(saveType, ButtonType.CANCEL);
 
         GridPane grid = new GridPane();
-        grid.setHgap(10); grid.setVgap(10);
+        grid.setHgap(10);
+        grid.setVgap(10);
         grid.setPadding(new Insets(20, 50, 10, 10));
 
         TextField titleField = new TextField(item.getTitle());
         DatePicker datePicker = new DatePicker(item.getEndDate());
-        
+
         ComboBox<String> statusBox = new ComboBox<>();
         statusBox.getItems().addAll("none", "in progress", "ranger");
         statusBox.setValue(item.getMasteryStatus());
@@ -416,7 +422,7 @@ public class HelloApplication extends Application {
                 item.setTitle(titleField.getText());
                 item.setEndDate(datePicker.getValue());
                 item.setMasteryStatus(statusBox.getValue());
-                
+
                 String spec = specificField.getText();
                 try {
                     if (item instanceof Reading) ((Reading) item).setChapter(spec);
@@ -447,7 +453,8 @@ public class HelloApplication extends Application {
         dialog.getDialogPane().getButtonTypes().addAll(addType, ButtonType.CANCEL);
 
         GridPane grid = new GridPane();
-        grid.setHgap(10); grid.setVgap(10);
+        grid.setHgap(10);
+        grid.setVgap(10);
         grid.setPadding(new Insets(20, 50, 10, 10));
 
         ComboBox<String> typeBox = new ComboBox<>();
@@ -486,8 +493,10 @@ public class HelloApplication extends Application {
                 try {
                     // Use chosenDate instead of LocalDate.now()
                     if (type.equals("Reading")) return new Reading(title, chosenDate, chosenDate, "none", spec);
-                    if (type.equals("Assignment")) return new Assignment(title, chosenDate, chosenDate, "none", Double.parseDouble(spec));
-                    if (type.equals("Quiz")) return new Quiz(title, chosenDate, chosenDate, "none", Integer.parseInt(spec));
+                    if (type.equals("Assignment"))
+                        return new Assignment(title, chosenDate, chosenDate, "none", Double.parseDouble(spec));
+                    if (type.equals("Quiz"))
+                        return new Quiz(title, chosenDate, chosenDate, "none", Integer.parseInt(spec));
                     if (type.equals("Exam")) return new Exam(title, chosenDate, chosenDate, "none", spec, 25.0);
                 } catch (Exception ex) {
                     System.out.println("Invalid number entered!");
@@ -513,13 +522,15 @@ public class HelloApplication extends Application {
         dialog.getDialogPane().getStyleClass().add("dialog-pane");
         ButtonType addType = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(addType, ButtonType.CANCEL);
-        
+
         GridPane grid = new GridPane();
-        grid.setHgap(10); grid.setVgap(10); grid.setPadding(new Insets(20, 150, 10, 10));
-        
-        TextField nameField = new TextField(); 
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField nameField = new TextField();
         TextField profField = new TextField();
-        
+
         // Image Selection
         TextField imageField = new TextField();
         imageField.setEditable(false);
@@ -542,13 +553,19 @@ public class HelloApplication extends Application {
             if (file != null) syllabusField.setText(file.getAbsolutePath());
         });
 
-        grid.add(new Label("Course Name:"), 0, 0); grid.add(nameField, 1, 0);
-        grid.add(new Label("Professor:"), 0, 1); grid.add(profField, 1, 1);
-        grid.add(new Label("Course Image:"), 0, 2); grid.add(imageField, 1, 2); grid.add(imgBtn, 2, 2);
-        grid.add(new Label("Syllabus (PDF/DOCX):"), 0, 3); grid.add(syllabusField, 1, 3); grid.add(sylBtn, 2, 3);
+        grid.add(new Label("Course Name:"), 0, 0);
+        grid.add(nameField, 1, 0);
+        grid.add(new Label("Professor:"), 0, 1);
+        grid.add(profField, 1, 1);
+        grid.add(new Label("Course Image:"), 0, 2);
+        grid.add(imageField, 1, 2);
+        grid.add(imgBtn, 2, 2);
+        grid.add(new Label("Syllabus (PDF/DOCX):"), 0, 3);
+        grid.add(syllabusField, 1, 3);
+        grid.add(sylBtn, 2, 3);
 
         dialog.getDialogPane().setContent(grid);
-        
+
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == addType) {
                 String imgPath = imageField.getText().isEmpty() ? null : imageField.getText();
@@ -557,7 +574,7 @@ public class HelloApplication extends Application {
             }
             return null;
         });
-        
+
         dialog.showAndWait().ifPresent(newCourse -> {
             allCourses.add(newCourse);
             addCardToGrid(newCourse);
@@ -609,10 +626,14 @@ public class HelloApplication extends Application {
         }
 
         VBox typeFilters = new VBox(5);
-        CheckBox readCB = new CheckBox("Readings"); readCB.setSelected(true);
-        CheckBox assnCB = new CheckBox("Assignments"); assnCB.setSelected(true);
-        CheckBox quizCB = new CheckBox("Quizzes"); quizCB.setSelected(true);
-        CheckBox examCB = new CheckBox("Exams"); examCB.setSelected(true);
+        CheckBox readCB = new CheckBox("Readings");
+        readCB.setSelected(true);
+        CheckBox assnCB = new CheckBox("Assignments");
+        assnCB.setSelected(true);
+        CheckBox quizCB = new CheckBox("Quizzes");
+        quizCB.setSelected(true);
+        CheckBox examCB = new CheckBox("Exams");
+        examCB.setSelected(true);
         typeFilters.getChildren().addAll(readCB, assnCB, quizCB, examCB);
 
         Label courseLabel = new Label("Courses:");
@@ -635,7 +656,8 @@ public class HelloApplication extends Application {
         navRow.getChildren().addAll(prevBtn, monthLabel, nextBtn);
 
         GridPane calendarGrid = new GridPane();
-        calendarGrid.setHgap(5); calendarGrid.setVgap(5);
+        calendarGrid.setHgap(5);
+        calendarGrid.setVgap(5);
         calendarGrid.setAlignment(Pos.CENTER);
 
         Runnable refreshCalendar = () -> {
@@ -692,15 +714,21 @@ public class HelloApplication extends Application {
             }
         };
 
-        prevBtn.setOnAction(e -> { currentMonth.set(currentMonth.get().minusMonths(1)); refreshCalendar.run(); });
-        nextBtn.setOnAction(e -> { currentMonth.set(currentMonth.get().plusMonths(1)); refreshCalendar.run(); });
-        
+        prevBtn.setOnAction(e -> {
+            currentMonth.set(currentMonth.get().minusMonths(1));
+            refreshCalendar.run();
+        });
+        nextBtn.setOnAction(e -> {
+            currentMonth.set(currentMonth.get().plusMonths(1));
+            refreshCalendar.run();
+        });
+
         // Wire up filters
         readCB.setOnAction(e -> refreshCalendar.run());
         assnCB.setOnAction(e -> refreshCalendar.run());
         quizCB.setOnAction(e -> refreshCalendar.run());
         examCB.setOnAction(e -> refreshCalendar.run());
-        for(CheckBox cb : courseCBs) cb.setOnAction(e -> refreshCalendar.run());
+        for (CheckBox cb : courseCBs) cb.setOnAction(e -> refreshCalendar.run());
 
         refreshCalendar.run();
         calendarArea.getChildren().addAll(navRow, calendarGrid);
@@ -738,10 +766,10 @@ public class HelloApplication extends Application {
         VBox filterBox = new VBox(10);
         Label filterLabel = new Label("Filter by Course:");
         filterLabel.getStyleClass().add("sidebar-header");
-        
+
         FlowPane filterPane = new FlowPane(10, 10);
         List<CheckBox> courseFilters = new ArrayList<>();
-        
+
         for (Course course : allCourses) {
             CheckBox cb = new CheckBox(course.getCourseName());
             cb.setSelected(true);
@@ -758,10 +786,10 @@ public class HelloApplication extends Application {
         TableView<CourseItem> examsTable = createItemTable();
 
         tabPane.getTabs().addAll(
-            new Tab("All Readings", readingsTable),
-            new Tab("All Assignments", assignmentsTable),
-            new Tab("All Quizzes", quizzesTable),
-            new Tab("All Exams", examsTable)
+                new Tab("All Readings", readingsTable),
+                new Tab("All Assignments", assignmentsTable),
+                new Tab("All Quizzes", quizzesTable),
+                new Tab("All Exams", examsTable)
         );
         for (Tab t : tabPane.getTabs()) t.setClosable(false);
 
@@ -792,7 +820,7 @@ public class HelloApplication extends Application {
         updateTables.run();
 
         layout.getChildren().addAll(backBtn, titleLabel, filterBox, tabPane);
-        
+
         ScrollPane scrollPane = new ScrollPane(layout);
         scrollPane.setFitToWidth(true);
         scrollPane.getStyleClass().add("root");
@@ -808,17 +836,23 @@ public class HelloApplication extends Application {
         Dialog<Boolean> dialog = new Dialog<>();
         dialog.setTitle("Edit Course Details");
         dialog.getDialogPane().getStyleClass().add("dialog-pane");
+
         ButtonType saveType = new ButtonType("Save Changes", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(saveType, ButtonType.CANCEL);
+        ButtonType deleteType = new ButtonType("Delete Course", ButtonBar.ButtonData.OTHER);
+
+        dialog.getDialogPane().getButtonTypes().addAll(saveType, deleteType, ButtonType.CANCEL);
 
         GridPane grid = new GridPane();
-        grid.setHgap(10); grid.setVgap(10); grid.setPadding(new Insets(20, 50, 10, 10));
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 50, 10, 10));
 
         TextField nameField = new TextField(course.getCourseName());
         TextField profField = new TextField(course.getProfessorName());
 
         TextField imageField = new TextField(course.getImagePath() == null ? "" : course.getImagePath());
         imageField.setEditable(false);
+
         Button imgBtn = new Button("Browse...");
         imgBtn.setOnAction(e -> {
             FileChooser fc = new FileChooser();
@@ -829,6 +863,7 @@ public class HelloApplication extends Application {
 
         TextField syllabusField = new TextField(course.getSyllabusPath() == null ? "" : course.getSyllabusPath());
         syllabusField.setEditable(false);
+
         Button sylBtn = new Button("Browse...");
         sylBtn.setOnAction(e -> {
             FileChooser fc = new FileChooser();
@@ -837,12 +872,46 @@ public class HelloApplication extends Application {
             if (file != null) syllabusField.setText(file.getAbsolutePath());
         });
 
-        grid.add(new Label("Course Name:"), 0, 0); grid.add(nameField, 1, 0);
-        grid.add(new Label("Professor:"), 0, 1); grid.add(profField, 1, 1);
-        grid.add(new Label("Course Image:"), 0, 2); grid.add(imageField, 1, 2); grid.add(imgBtn, 2, 2);
-        grid.add(new Label("Syllabus:"), 0, 3); grid.add(syllabusField, 1, 3); grid.add(sylBtn, 2, 3);
+        grid.add(new Label("Course Name:"), 0, 0);
+        grid.add(nameField, 1, 0);
+
+        grid.add(new Label("Professor:"), 0, 1);
+        grid.add(profField, 1, 1);
+
+        grid.add(new Label("Course Image:"), 0, 2);
+        grid.add(imageField, 1, 2);
+        grid.add(imgBtn, 2, 2);
+
+        grid.add(new Label("Syllabus:"), 0, 3);
+        grid.add(syllabusField, 1, 3);
+        grid.add(sylBtn, 2, 3);
 
         dialog.getDialogPane().setContent(grid);
+
+        // Style and handle Delete Course button
+        javafx.scene.Node deleteButton = dialog.getDialogPane().lookupButton(deleteType);
+        deleteButton.getStyleClass().add("danger-button");
+
+        deleteButton.setStyle("-fx-background-color: #c0392b; -fx-text-fill: white; -fx-font-weight: bold;");
+
+        deleteButton.addEventFilter(javafx.event.ActionEvent.ACTION, e -> {
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Delete Course");
+            confirm.setHeaderText("Delete this course?");
+            confirm.setContentText("This will delete the course and all items inside it.");
+
+            confirm.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.OK) {
+                    allCourses.remove(course);
+                    saveAll();
+                    refreshDashboard();
+                    dialog.close();
+                    window.setScene(dashboardScene);
+                }
+            });
+
+            e.consume();
+        });
 
         dialog.setResultConverter(btn -> {
             if (btn == saveType) {
@@ -858,10 +927,12 @@ public class HelloApplication extends Application {
         dialog.showAndWait().ifPresent(saved -> {
             if (saved) {
                 saveAll();
-                openCourseDetail(course); // Refresh the detail view
+                openCourseDetail(course);
             }
         });
     }
 
-    public static void main(String[] args) { launch(); }
+    public static void main(String[] args) {
+        launch(args);
+    }
 }
