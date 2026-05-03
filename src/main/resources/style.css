@@ -134,19 +134,6 @@
     -fx-cursor: hand;
 }
 
-.action-button:hover {
-    -fx-brightness: 1.1;
-}
-
-.danger-button {
-    -fx-background-color: danger;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-    -fx-padding: 8px 16px;
-    -fx-background-radius: 6px;
-    -fx-cursor: hand;
-}
-
 .danger-button:hover {
     -fx-brightness: 1.1;
 }
@@ -186,6 +173,13 @@
 }
 .table-row-cell:odd {
     -fx-background-color: row-odd-bg;
+}
+.table-row-cell:even {
+    -fx-background-color: card-bg;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: primary;
 }
 .tab-pane .tab-header-area .tab-header-background {
     -fx-background-color: bg-color;
@@ -240,4 +234,34 @@
 }
 .combo-box .list-cell {
     -fx-text-fill: text-main;
+}
+.danger-button,
+.dialog-pane .danger-button,
+.button.danger-button {
+    -fx-background-color: #c0392b;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.danger-button:hover,
+.dialog-pane .danger-button:hover,
+.button.danger-button:hover {
+    -fx-background-color: #a93226;
+}
+.root:not(.light-mode) .table-row-cell:odd {
+    -fx-background-color: #1f2937;
+}
+
+.root:not(.light-mode) .table-row-cell:even {
+    -fx-background-color: #273244;
+}
+
+.root:not(.light-mode) .table-row-cell:selected {
+    -fx-background-color: #475569;
+}
+.button:hover {
+    -fx-opacity: 0.9;
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+    -fx-cursor: hand;
 }
